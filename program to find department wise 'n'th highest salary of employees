@@ -1,0 +1,13 @@
+
+data1 = [(1,"A",1000,"IT"),(2,"B",1500,"IT"),(3,"C",2500,"IT"),(4,"D",3000,"HR"),(5,"E",2000,"HR"),(6,"F",1000,"HR"),(7,"G",4000,"Sales"),(8,"H",4000,"Sales"),(9,"I",1000,"Sales"),(10,"J",2000,"Sales")]
+schema1 = ["EmpId","EmpName","Salary","DeptName"]
+df= spark.createDataFrame(data1,schema1)
+display(df)
+
+from pyspark.sql.functions import *
+from pyspark.sql.window import *
+
+df_rank=df.select('*',       dense_rank().over(Window.partitionBy(df.DeptName).orderBy(df.Salary.desc())).alias('rank'))
+display(df_rank)
+
+display(df_rank.filter(df_rank.rank==2))
