@@ -1,0 +1,30 @@
+data1 = [(1,'Steve'),(2,'David'),(3,'John'),(4,'Shree'),(5,'Helen')]
+data2 = [(1,'SQL',90),(1,'Pyspark',100),(2,'SQL',70),(2,'Pyspark',60),(3,'SQL',30),(3,'Pyspark',20),(4,'SQL',50),(4,'Pyspark',50),(5,'SQL',45),(5,'Pyspark',45)]
+schema1 = ["Id","Name"]
+schema2 = ["Id","Subject","Mark"]
+df1= spark.createDataFrame(data1,schema1)
+df2= spark.createDataFrame(data2,schema2)
+display (df1)
+display (df2)
+
+df_join=df1.join(df2,df1.Id==df2.Id).drop(df2.Id)
+display(df_join)
+
+
+from pyspark.sql.functions import *
+df_per=df_join.groupBy('Id','Name').agg(sum('Mark'))
+display(df_per)
+
+
+from pyspark.sql.functions import *
+df_per=df_join.groupBy('Id','Name').agg(
+    (sum('Mark')/count('*')).alias('Percentage'))
+display(df_per)
+
+df_final = df_per.select ('*',
+when(df_per.Percentage>= 70, 'Distinction')
+.when((df_per.Percentage<70) & (df_per.Percentage>=60),'FirstClass')
+.when((df_per.Percentage<60) & (df_per.Percentage>=50),'SecondClass')
+.when((df_per.Percentage<50) & (df_per.Percentage>=40),'ThirdClass')
+.when(df_per.Percentage<40,'Fail').alias('Result'))
+display(df_final)
