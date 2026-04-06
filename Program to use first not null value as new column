@@ -1,0 +1,15 @@
+data = [('Goa','','AP'),('','AP',None),(None,'','bglr')]
+columns = ["city1","city2","city3"]
+df= spark.createDataFrame(data,columns)
+display(df)
+
+from pyspark.sql.functions import *
+
+df1 = df.withColumn('firstnotnull',coalesce(df.city1,df.city2,df.city3))
+display(df1)
+
+df1 = df.withColumn('firstnotnull',coalesce(
+when (df.city1=="",None).otherwise(df.city1), 
+when (df.city2=="",None).otherwise(df.city2), 
+when (df.city3=="",None).otherwise(df.city3)))
+display(df1)
