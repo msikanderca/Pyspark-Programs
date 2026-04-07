@@ -1,0 +1,14 @@
+from pyspark.sql.types import *
+data=[(1,'John','ADF'),(1,'John','ADB'),(1,'John','PowerBI'),(2,'Joanne','ADF'),(2,'Joanne','SQL'),(2,'Joanne','Crystal Report'),(3,'Vikas','ADF'),(3,'Vikas','SQL'),(3,'Vikas','SSIS'),(4,'Monu','SQL'),(4,'Monu','SSIS'),(4,'Monu','SSAS'),(4,'Monu','ADF')]
+schema=["EmpId","EmpName","Skill"]
+df1=spark.createDataFrame(data,schema)
+display(df1)
+
+
+from pyspark.sql.functions import collect_list,concat_ws
+df2=df1.groupBy(df1.EmpName).agg(collect_list(df1.Skill).alias('Skill'))
+display(df2)
+
+
+df3=df2.select(df2.EmpName,concat_ws(',',df2.Skill).alias('Skills'))
+display(df3)
