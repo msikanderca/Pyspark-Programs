@@ -1,0 +1,9 @@
+
+data=[('Joanne',"040-20215632"),('Tom',"044-23651023"),('John',"086-12456782")]
+schema=["name","phone"]
+df=spark.createDataFrame(data,schema)
+display(df)
+
+from pyspark.sql.functions import split
+df=df.withColumn("std_code",split(df.phone,'-').getItem(0)).withColumn("phone_num",split(df.phone,'-').getItem(1))
+display(df)
