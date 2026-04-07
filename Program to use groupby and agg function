@@ -1,0 +1,16 @@
+from pyspark.sql.types import *
+data=[('IT','M'),('IT','F'),('IT','M'),('IT','M'),('HR','F'),('HR','F'),('HR','F'),('HR','F'),('HR','F'),('Sales','M'),('Sales','M'),('Sales','F'),('Sales','M'),('Sales','M'),('Sales','F')]
+schema=["DeptName","Gender"]
+df1=spark.createDataFrame(data,schema)
+display(df1)
+ 
+from pyspark.sql.functions import *
+df2 = df1.select(df1.DeptName,
+when(df1.Gender=='M',1).alias('Male'),
+when(df1.Gender=='F',1).alias('Female'))
+display(df2)
+
+display(df2.groupBy(df2.DeptName)
+.agg(count(df2.DeptName)
+.alias('TotalEmp'),sum(df2.Male).alias('TotalMale'),
+sum(df2.Female).alias('TotalFemale')))
