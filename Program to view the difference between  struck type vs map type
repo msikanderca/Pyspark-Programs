@@ -1,0 +1,30 @@
+from pyspark.sql.types import *
+data=[(1,('A-424','Noida','India')),(2,('M.15','Unnao','India'))]
+schema = StructType([
+     StructField('AddId', IntegerType(), True),
+     StructField('Address', StructType([
+         StructField('Add1', StringType(), True),
+         StructField('City', StringType(), True),
+         StructField('Country', StringType(), True)
+         ]))
+     ])
+dfST=spark.createDataFrame(data,schema)
+display(dfST)
+
+df1=dfST.select('*',dfST.Address.Country.alias('Address1'))
+display(df1)
+
+
+data1=[(1,{'Laptop':'Apple',"Mobile":"OnePlus","HeadPhones":"boat"}),(2,{'Laptop':'Apple',"Mobile":"OnePlus"})]
+from pyspark.sql.types import StructField, StructType, StringType, MapType
+schema1 = StructType([
+    StructField('EmpId', IntegerType(), True),
+    StructField('Items', MapType(StringType(),StringType()),True)
+])
+
+dfMT=spark.createDataFrame(data1,schema1)
+display(dfMT)
+
+
+from pyspark.sql.functions import explode
+display(dfMT.select('*',explode(dfMT.Items)))
