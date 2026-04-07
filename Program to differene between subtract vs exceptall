@@ -1,0 +1,23 @@
+data = [(1,"Mike","2018","10",30000), 
+    (2,"John","2010","20",40000), 
+    (2,"John","2010","20",40000), 
+    (3,"Jack","2010","10",40000), 
+    (4,"Charlee","2005","60",35000), 
+    (5,"Guo","2010","40",38000)]
+schema = ["empid","empname","doj", "deptid","salary"]
+df = spark.createDataFrame(data, schema)
+display(df)
+
+
+data1 = [(1,"Mike","2018","10",30000), 
+           (4,"Charlee","2005","60",35000), 
+           (5,"Guo","2010","40",38000)] 
+schema1 = ["empid","empname","doj", "deptid","salary"]
+df1 = spark.createDataFrame(data1,schema1) 
+display(df1)
+
+
+display(df.subtract(df1))
+
+
+display(df.exceptAll(df1))
